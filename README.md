@@ -1,46 +1,48 @@
-# Astro Starter Kit: Basics
+# Generador de Constancias PDF - Bomberos Voluntarios
 
-```sh
-npm create astro@latest -- --template basics
-```
+Esta aplicación web fue diseñada específicamente para la **Asociación de Bomberos Voluntarios de José C. Paz**. Su propósito principal es agilizar la digitalización y emisión de constancias de siniestros, replicando el diseño oficial exacto que utiliza la institución.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Características
 
-## 🚀 Project Structure
+- 🚒 **Generación Instantánea de PDF:** Utiliza la librería [jsPDF](https://github.com/parallax/jsPDF) para generar documentos vectoriales de alta calidad directamente en el navegador, sin necesidad de un servidor backend o base de datos.
+- 📑 **Formatos Múltiples:** 
+  - Genera 3 copias idénticas en el mismo documento PDF.
+  - La primera página incluye la sección de "Retiro, Firma y Fecha" para el solicitante, mientras que la segunda y tercera copia se generan limpias.
+- 🏢 **Formulario Inteligente:** Los campos se adaptan automáticamente dependiendo si el incidente fue en una *Vivienda* o un *Vehículo* (mostrando campos como *Dominio* y *Póliza* solo cuando corresponde).
+- ⚡ **Desempeño y Diseño:** Construido sobre [Astro](https://astro.build/), con un diseño moderno, oscuro y premium utilizando Vanilla CSS, proporcionando una interfaz rápida, accesible y súper estilizada.
 
-Inside of your Astro project, you'll see the following folders and files:
+## Requisitos Previos
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
-```
+Para ejecutar la aplicación de forma local, necesitas tener instalado:
+- **Node.js** (versión 18 o superior recomendada).
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## Instalación y Uso Local
 
-## 🧞 Commands
+1. Clona el repositorio en tu máquina:
+   ```bash
+   git clone https://github.com/LeoCoronel/constanciasCreator.git
+   ```
 
-All commands are run from the root of the project, from a terminal:
+2. Ingresa al directorio del proyecto:
+   ```bash
+   cd constanciasCreator
+   ```
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+3. Instala las dependencias necesarias:
+   ```bash
+   npm install
+   ```
 
-## 👀 Want to learn more?
+4. Ejecuta el servidor de desarrollo local:
+   ```bash
+   npm run dev
+   ```
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+5. ¡Listo! Abre tu navegador de preferencia y visita **[http://localhost:4321](http://localhost:4321)**.
+
+## Estructura Principal del Proyecto
+
+- `src/pages/index.astro`: Interfaz principal y formulario de recolección de datos.
+- `src/scripts/pdfGenerator.ts`: Archivo clave que contiene toda la lógica de dibujo, posicionamiento y exportación hacia formato PDF.
+- `public/logo.jpg`: Logo de la Institución utilizado como membrete en los documentos. 
+- `src/styles/global.css`: Variables y estilos globales de tematización.
