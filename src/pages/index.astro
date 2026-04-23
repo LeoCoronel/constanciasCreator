@@ -1,0 +1,255 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout>
+	<div class="surface-box">
+		<div class="tabs">
+			<button class="tab-btn active" data-type="vivienda" type="button"
+				>Siniestro en Vivienda</button
+			>
+			<button class="tab-btn" data-type="auto" type="button"
+				>Siniestro en Vehículo</button
+			>
+		</div>
+
+		<form id="constancia-form">
+			<input
+				type="hidden"
+				id="tipo-siniestro"
+				name="tipo-siniestro"
+				value="vivienda"
+			/>
+
+			<div class="form-grid">
+				<div class="form-group">
+					<label for="solicitante"
+						>Solicitante (Apellido y Nombre)</label
+					>
+					<input
+						type="text"
+						id="solicitante"
+						required
+						placeholder="Ej: AVALOS, EZEQUIEL"
+					/>
+				</div>
+				<div class="form-group">
+					<label for="dni">DNI</label>
+					<input
+						type="text"
+						id="dni"
+						required
+						placeholder="Ej: 31.774.246"
+					/>
+				</div>
+
+				<div class="form-group full-width">
+					<label for="domicilio">Domicilio del Hecho</label>
+					<input
+						type="text"
+						id="domicilio"
+						required
+						placeholder="Ej: SANTIAGO DEL ESTERO 4240"
+					/>
+				</div>
+
+				<div class="form-group">
+					<label for="localidad">Localidad</label>
+					<input
+						type="text"
+						id="localidad"
+						required
+						value="JOSÉ C. PAZ"
+					/>
+				</div>
+				<div class="form-group">
+					<label for="partido">Partido</label>
+					<input
+						type="text"
+						id="partido"
+						required
+						value="JOSÉ C. PAZ"
+					/>
+				</div>
+
+				<div class="form-group">
+					<label for="motivo">Motivo del Siniestro</label>
+					<input
+						type="text"
+						id="motivo"
+						required
+						placeholder="Ej: INCENDIO DE VIVIENDA / VEHICULO"
+					/>
+				</div>
+				<div class="form-group conditional-auto" style="display: none;">
+					<label for="dominio">Dominio (Patente)</label>
+					<input type="text" id="dominio" placeholder="Ej: HNN 303" />
+				</div>
+
+				<div class="form-group full-width">
+					<label for="perdidas">Pérdidas Observadas</label>
+					<input
+						type="text"
+						id="perdidas"
+						required
+						value="No se estiman"
+					/>
+				</div>
+
+				<div class="form-group full-width">
+					<label for="presentado">Para ser presentado en</label>
+					<input
+						type="text"
+						id="presentado"
+						required
+						placeholder="Ej: DIGNA SEGUROS"
+					/>
+				</div>
+
+				<div class="form-group conditional-auto" style="display: none;">
+					<label for="poliza">Número de Póliza</label>
+					<input type="text" id="poliza" placeholder="Ej: 175010" />
+				</div>
+
+				<div class="form-group">
+					<label for="parte">Parte N°</label>
+					<input
+						type="text"
+						id="parte"
+						required
+						placeholder="Ej: 1079"
+					/>
+				</div>
+
+				<div class="form-group">
+					<label for="fecha">Fecha del Siniestro</label>
+					<input type="date" id="fecha" required />
+				</div>
+				<div class="form-group">
+					<label for="hora">Hora del Siniestro</label>
+					<input type="time" id="hora" required />
+				</div>
+			</div>
+
+			<button type="submit" class="btn-primary">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					><path
+						d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+					></path><polyline points="14 2 14 8 20 8"></polyline><line
+						x1="16"
+						y1="13"
+						x2="8"
+						y2="13"></line><line x1="16" y1="17" x2="8" y2="17"
+					></line><polyline points="10 9 9 9 8 9"></polyline></svg
+				>
+				Generar Constancia PDF
+			</button>
+		</form>
+	</div>
+</Layout>
+
+<script>
+	import { generarPDF } from "../scripts/pdfGenerator";
+
+	document.addEventListener("DOMContentLoaded", () => {
+		const tabs = document.querySelectorAll(".tab-btn");
+		const autoFields = document.querySelectorAll(".conditional-auto");
+		const tipoSiniestroInput = document.getElementById(
+			"tipo-siniestro",
+		) as HTMLInputElement;
+		const form = document.getElementById(
+			"constancia-form",
+		) as HTMLFormElement;
+
+		// Set today as default date
+		const fechaInput = document.getElementById("fecha") as HTMLInputElement;
+		if (fechaInput) {
+			fechaInput.valueAsDate = new Date();
+		}
+
+		tabs.forEach((tab) => {
+			tab.addEventListener("click", (e) => {
+				// Handle active class
+				tabs.forEach((t) => t.classList.remove("active"));
+				const target = e.target as HTMLElement;
+				target.classList.add("active");
+
+				const tipo = target.getAttribute("data-type");
+				tipoSiniestroInput.value = tipo || "vivienda";
+
+				// Toggle visibility of auto fields
+				autoFields.forEach((field) => {
+					(field as HTMLElement).style.display =
+						tipo === "auto" ? "flex" : "none";
+				});
+
+				// Set default motives based on type
+				const motivoInput = document.getElementById(
+					"motivo",
+				) as HTMLInputElement;
+				if (
+					tipo === "auto" &&
+					motivoInput.value === "INCENDIO DE VIVIENDA"
+				) {
+					motivoInput.value = "INCENDIO DE VEHICULO";
+				} else if (
+					tipo === "vivienda" &&
+					motivoInput.value === "INCENDIO DE VEHICULO"
+				) {
+					motivoInput.value = "INCENDIO DE VIVIENDA";
+				}
+			});
+		});
+
+		form.addEventListener("submit", (e) => {
+			e.preventDefault();
+
+			const formData = {
+				tipo: tipoSiniestroInput.value,
+				solicitante: (
+					document.getElementById("solicitante") as HTMLInputElement
+				).value,
+				dni: (document.getElementById("dni") as HTMLInputElement).value,
+				domicilio: (
+					document.getElementById("domicilio") as HTMLInputElement
+				).value,
+				localidad: (
+					document.getElementById("localidad") as HTMLInputElement
+				).value,
+				partido: (
+					document.getElementById("partido") as HTMLInputElement
+				).value,
+				motivo: (document.getElementById("motivo") as HTMLInputElement)
+					.value,
+				dominio: (
+					document.getElementById("dominio") as HTMLInputElement
+				).value,
+				perdidas: (
+					document.getElementById("perdidas") as HTMLInputElement
+				).value,
+				presentado: (
+					document.getElementById("presentado") as HTMLInputElement
+				).value,
+				poliza: (document.getElementById("poliza") as HTMLInputElement)
+					.value,
+				parte: (document.getElementById("parte") as HTMLInputElement)
+					.value,
+				fecha: (document.getElementById("fecha") as HTMLInputElement)
+					.value,
+				hora: (document.getElementById("hora") as HTMLInputElement)
+					.value,
+			};
+
+			generarPDF(formData);
+		});
+	});
+</script>

@@ -1,0 +1,25 @@
+---
+import '../styles/global.css';
+---
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema de Constancias | Bomberos Voluntarios</title>
+  <meta name="description" content="Generador de constancias en PDF para siniestros de viviendas y automóviles." />
+</head>
+<body>
+  <div class="app-container">
+    <header>
+      <img src="/logo.jpg" alt="Logo Institucional" class="app-logo" onerror="this.src='https://via.placeholder.com/80?text=Logo'" />
+      <h1>Generador de Constancias</h1>
+      <p>Bomberos Voluntarios de José C. Paz - Emisión de Reportes en PDF</p>
+    </header>
+    <main>
+      <slot />
+    </main>
+  </div>
+</body>
+</html>
